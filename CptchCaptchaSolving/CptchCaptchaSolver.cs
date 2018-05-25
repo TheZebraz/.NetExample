@@ -9,11 +9,11 @@ namespace CptchCaptchaSolving
     public class CptchCaptchaSolver : VkNet.Utils.AntiCaptcha.ICaptchaSolver
     {
 
-        //Ключ нужно заменить на свой со страницы http://cptch.net/profile
+        //Ключ нужно заменить на свой со страницы https://cptch.net/profile
         private const String CPTCH_API_KEY = "0ba6b3c0c7e23ba848eebfbfe94d6afcb803184be54062da2bc3b9423e0a5ad2";
 
-        private const String CPTCH_UPLOAD_URL = "http://cptch.net/in.php";
-        private const String CPTCH_RESULT_URL = "http://cptch.net/res.php";
+        private const String CPTCH_UPLOAD_URL = "https://cptch.net/in.php";
+        private const String CPTCH_RESULT_URL = "https://cptch.net/res.php";
 
         public CptchCaptchaSolver() { }
 
