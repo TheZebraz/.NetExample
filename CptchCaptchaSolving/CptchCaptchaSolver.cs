@@ -21,23 +21,23 @@ namespace CptchCaptchaSolving
         {
             Console.WriteLine("Решаем капчу: " + url);
             //Скачиваем файл капчи из Вконтакте
-            byte[] capcha = DownloadCapchaFromVk(url);
-            if (capcha != null)
+            byte[] captcha = DownloadCaptchaFromVk(url);
+            if (captcha != null)
             {
                 //Загружаем файл на cptch.net
-                string uploadResponse = UploadCapchaToCptch(capcha);
+                string uploadResponse = UploadCaptchaToCptch(captcha);
                 //Получаем из ответа id капчи
-                string capchaId = ParseUploadResponse(uploadResponse);
-                if (capchaId != null)
+                string captchaId = ParseUploadResponse(uploadResponse);
+                if (captchaId != null)
                 {
-                    Console.WriteLine("Id капчи: " + capchaId);
+                    Console.WriteLine("Id капчи: " + captchaId);
                     //Ждем несколько секунд
                     Thread.Sleep(1000);
                     //Делаем запрос на получение ответа до тех пор пока ответ не будет получен
                     string solution = null;
                     do
                     {
-                        string solutionResponse = GetCapchaSolution(getCapchaRequestUri(capchaId));
+                        string solutionResponse = GetCaptchaSolution(getCaptchaRequestUri(captchaId));
                         solution = ParseSolutionResponse(solutionResponse);
                     } while (solution == null);
 
@@ -53,12 +53,12 @@ namespace CptchCaptchaSolving
             return null;
         }
 
-        private string getCapchaRequestUri(string capchaId)
+        private string getCaptchaRequestUri(string captchaId)
         {
-            return CPTCH_RESULT_URL + "?" + "key=" + CPTCH_API_KEY + "&action=get" + "&id=" + capchaId;
+            return CPTCH_RESULT_URL + "?" + "key=" + CPTCH_API_KEY + "&action=get" + "&id=" + captchaId;
         }
 
-        private byte[] DownloadCapchaFromVk(string captchaUrl)
+        private byte[] DownloadCaptchaFromVk(string captchaUrl)
         {
             using (WebClient client = new WebClient())
             using (Stream s = client.OpenRead(captchaUrl))
@@ -67,7 +67,7 @@ namespace CptchCaptchaSolving
             }
         }
 
-        private string UploadCapchaToCptch(byte[] capcha)
+        private string UploadCaptchaToCptch(byte[] captcha)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -75,7 +75,7 @@ namespace CptchCaptchaSolving
 
                 form.Add(new StringContent(CPTCH_API_KEY), "key");
                 form.Add(new StringContent("post"), "method");
-                form.Add(new ByteArrayContent(capcha, 0, capcha.Length), "file", "capcha");
+                form.Add(new ByteArrayContent(captcha, 0, captcha.Length), "file", "captcha");
                 var response = httpClient.PostAsync(CPTCH_UPLOAD_URL, form).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -103,9 +103,9 @@ namespace CptchCaptchaSolving
             return null;
         }
 
-        public static String GetCapchaSolution(string siteUrl)
+        public static String GetCaptchaSolution(string captchaSolutionUrl)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(siteUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(captchaSolutionUrl);
 
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             using (Stream stream = response.GetResponseStream())
@@ -119,12 +119,12 @@ namespace CptchCaptchaSolving
         {
             if (response.Equals("ERROR"))
             {
-                Console.WriteLine("Error when get captcha result: " + response);
+                Console.WriteLine("Ошибка во время получения ответа: " + response);
                 return null;
             }
             else if(response.Equals("CAPCHA_NOT_READY"))
             {
-                Console.WriteLine("Not ready now");
+                Console.WriteLine("Капча еще не готова");
                 Thread.Sleep(1000);
                 return null;
             } else if (response.Contains("OK"))
@@ -136,7 +136,7 @@ namespace CptchCaptchaSolving
 
         public void CaptchaIsFalse()
         {
-            Console.WriteLine("Capcha is false");
+            Console.WriteLine("Последняя капча была распознана неверно");
         }
     }
 }
