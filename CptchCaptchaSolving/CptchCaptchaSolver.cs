@@ -11,6 +11,8 @@ namespace CptchCaptchaSolving
 
         //Ключ нужно заменить на свой со страницы https://cptch.net/profile
         private const String CPTCH_API_KEY = "0ba6b3c0c7e23ba848eebfbfe94d6afcb803184be54062da2bc3b9423e0a5ad2";
+        //Ваш идентификатор приложения (soft_id). Его можно получить, создав приложение на странице https://cptch.net/profile/soft
+        private const String CPTCH_SOFT_ID = "1";
 
         private const String CPTCH_UPLOAD_URL = "https://cptch.net/in.php";
         private const String CPTCH_RESULT_URL = "https://cptch.net/res.php";
@@ -75,6 +77,7 @@ namespace CptchCaptchaSolving
 
                 form.Add(new StringContent(CPTCH_API_KEY), "key");
                 form.Add(new StringContent("post"), "method");
+                form.Add(new StringContent(CPTCH_SOFT_ID), "soft_id");
                 form.Add(new ByteArrayContent(captcha, 0, captcha.Length), "file", "captcha");
                 var response = httpClient.PostAsync(CPTCH_UPLOAD_URL, form).Result;
                 if (response.IsSuccessStatusCode)

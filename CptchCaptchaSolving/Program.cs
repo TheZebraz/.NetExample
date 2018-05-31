@@ -13,6 +13,7 @@ namespace CptchCaptchaSolving
 
             string testCaptchaUrl = "https://vk.com/captcha.php?sid=948716433991&s=1";
             solver.Solve(testCaptchaUrl);
+
         }
     }
 }
